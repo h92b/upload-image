@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.1">
+    <title>Cargar Imagenes Al Navegador</title>
+    <style>
+        body {
+            background-color: rgb(6, 56, 101);
+            font-family: arial, 'sans serif';
+            margin: 0;
+        }
+
+        main {
+            background-color: rgb(9, 75, 134);
+            height: calc(100vh - 50px);
+            margin-top: 50px;
+            overflow-y: auto;
+        }
+
+        /* inicio del menu */
+        header {
+            background: linear-gradient( 270deg, rgb(9, 75, 134, 0.7), black calc(100% - 260px) );
+            color: #f7f7f7;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 0%;
+            visibility: hidden;
+            transition: 0.6s cubic-bezier(.76,.05,.86,.06);
+        }
+
+        header.active {
+            width: 100%;
+            visibility: visible;
+        }
+
+        header > div {
+            padding: 4px 14px 14px;
+            position: relative;
+            bottom: 0;
+            top: 0;
+            width: 240px;
+        }
+
+        header > div h1 {
+            margin: 0;
+            text-shadow: -2px 1px 2px rgb(9, 75, 134);
+            text-transform: uppercase;
+            visibility: visible;
+        }
+
+        header > div ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 1em 0 1em;
+        }
+
+        header > div ul > li {
+            background: rgba(35, 35, 35, 0.04);
+            border: 1px solid rgba(35, 35, 35, 0.04);
+            cursor: pointer;
+            margin-bottom: 2px;
+            opacity: 0;
+            padding: 10px;
+            transition: 0.5s;
+        }
+
+        header.active > div ul > li {
+            opacity: 1;
+        }
+
+        header > div ul > li:hover {
+            border-color: rgb(9, 75, 134);
+        }
+
+        header > div > div {
+            background: rgb(9, 75, 134);
+            border: 1px solid transparent;
+            box-shadow: 0 0 20px rgb(31, 65, 97);
+            cursor: pointer;
+            height: 30px;
+            position: absolute;
+            right: -20px;
+            top: 7px;
+            transition: 0.5s;
+            visibility: visible;
+            width: 36px;
+        }
+
+        header > div > div:hover {
+            background-color: rgb(6, 56, 101);
+        }
+
+        header > div > div > div {
+            border-top: 1px solid rgb(255, 255, 255);
+            box-shadow: 0 1px 1px rgba(6, 56, 101, 0.8);
+            margin: auto;
+            position: relative;
+            width: 60%;
+            transition: 1s;
+        }
+
+        header > div > div .bar1 {
+            top: 7px;
+        }
+
+        header > div > div .bar2 {
+            top: 14px;
+        }
+        
+        header > div > div .bar3 {
+            top: 21px;
+        }
+
+        header.active > div > div > div {
+            width: 70%;
+            transition: 1s;
+        }
+
+        header.active > div > div .bar1 {
+            top: 14px;
+            transform: rotate(40deg);
+        }
+
+        header.active > div > div .bar2 {
+            width: 0%;
+        }
+
+        header.active > div > div .bar3 {
+            top: 12px;
+            transform: rotate(-40deg);
+        }
+        /* fin del menu */
+
+        .contenerdor {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .contenerdor > div {
+            height: 400px;
+            min-width: 280px;
+            text-align: center;
+            width: 33.3%;
+        }
+
+        @media screen and (max-width: 500px) {
+            .contenerdor > div {
+                margin: auto;
+            }
+        }
+
+        .margen-en-el-cuadro-de-la-imagen {
+            margin: 6px;
+            height: 96%;
+        }
+
+        h2 {
+            text-align: center;
+            text-transform: capitalize;
+            margin: 18px 0;
+        }
+
+        .suelta-img {
+            width: 260px;
+            min-width: 240px;
+            height: 296px;
+            min-height: 240px;
+            border: 3px dashed rgb(160, 178, 232);
+            margin: auto
+        }
+
+        .suelta-img.start {
+            transform: scale(1.1);
+            border: 3px dashed rgb(0, 255, 85);
+            transition: 1s;
+        }
+
+        form {
+            width: 100%;
+            height: 100%;
+        }
+        
+        label {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+        }
+        
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .cont-progress {
+            padding: 1px;
+            width: 100%;
+        }
+
+        .cont-progress > div {
+            margin: 5px auto 0;
+            min-width: 246px;
+            width: 266px;
+        }
+
+        .progress {
+            background-color: rgb(160, 178, 232);
+            height: 12px;
+            width: 0%;
+        }
+
+        .delete {
+            align-items: center;
+            background: rgba(255, 0, 0, 0.671);
+            border: 1px solid red;
+            border-radius: 50%;
+            display: flex;
+            height: 98px;
+            justify-content: center;
+            right: -32px;
+            position: fixed;
+            top: -32px;
+            visibility: hidden;
+            width: 98px;
+        }
+
+        .delete.active {
+            visibility: visible;
+        }
+
+        .delete i {
+            color: white;
+            padding: 4px;
+        }
+
+        /* inicio items image */
+        div[role="item-img"] > div:hover {
+            opacity: 0.5
+        }
+
+        div[role="item-img"] > div {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        div[role="item-img"] > div > div {
+            position: absolute;
+        }
+
+        div[role="item-img"] > div > div > button:first-child {
+            margin-right: 4px;
+        }
+
+        div[role="item-img"].view {
+            bottom: 0;
+            height: inherit;
+            left: 0;
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: inherit;
+            z-index: 1;
+        }
+
+        /* fin items image */
+
+    </style>
+<body>
+</head>
+    <main>
+        
+        <section class="contenerdor">
+            <div>
+                <h2>arrastra y suelta</h2>
+                <div class="suelta-img">
+                    <form action="/ajax/index.php" method="post">
+                        <input type="file" name="img" id="inputImg" accept="imagen/*" hidden>
+                        <label for="inputImg" id="img" dropzone="true">suelta la imagen aqu&iacute;</label>
+                    </form>
+                </div>
+                <div class="cont-progress">
+                    <div>
+                        <div class="progress"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="delete">
+        <i class="trash">D</i>
+    </div>
+
+    <header class="active">
+        <div>
+            <h1>PageName</h1>
+            <ul>
+                <li>Inicio</li>
+                <li>Inicio</li>
+                <li>Inicio</li>
+                <li>Inicio</li>
+            </ul>
+            <div class="cont-botton">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        const img = document.querySelector('#img');
+        const inputImg = document.querySelector('#inputImg');
+        const suelta_img = document.querySelector('.suelta-img');
+        const data_transfer = new DataTransfer();        
+        const formatImg = /(.PNG|.png|.JPG|.jpg|.JPEG|.jpeg)$/i;
+        const typeFormat = ["image/png", "image/jpg", "image/jpeg"];
+        const contenerdor = document.querySelector('.contenerdor');
+        const cont_botton = document.querySelector('.cont-botton');
+        const header = document.querySelector('header');
+
+        cont_botton.addEventListener('click', ()=>{
+            (header.classList.toggle('active')) ?
+                header.classList.remove('active') :
+                    header.classList.add('active');
+            console.log(`Esta accion es realizada con JavaScript`)
+        });
+
+        header.addEventListener('click', ()=>{
+            header.classList.toggle('active')
+            console.log(`Esta accion es realizada con JavaScript`)
+        });
+
+        window.onload = function () {
+            header.classList.remove('active')
+            console.log(`Esta accion es realizada con JavaScript`)
+        }
+
+        function asdf(file) {
+            const file_reader = new FileReader();
+            ("undefined" !== typeof file)&&(
+
+                file_reader.onprogress = function (ev) {
+                    document.querySelector('.progress').style.width = (Math.round((ev.loaded * 100) / ev.total)) + '%';
+                },
+
+                file_reader.onload = function (ev) {
+                    const div = document.createElement('div');
+                    const divMargin = document.createElement('div');
+                    const divButton = document.createElement('div');
+                    const imgs = document.createElement('img');
+                    const buttonClose = document.createElement('button');
+                    const buttonView = document.createElement('button');
+
+                    div.setAttribute('draggable', 'true')
+                    div.setAttribute('role', 'item-img')
+                    divMargin.className = "margen-en-el-cuadro-de-la-imagen"
+                    imgs.src = ev.target.result
+
+                    buttonClose.type = "button"
+                    buttonView.type = "button"
+
+                    buttonClose.textContent = "Eliminar"
+                    buttonView.textContent = "Ampliar"
+
+                    divButton.appendChild(buttonClose)
+                    divButton.appendChild(buttonView)
+                    divMargin.appendChild(divButton)
+                    divMargin.appendChild(imgs)
+
+                    contenerdor.appendChild(div).appendChild(divMargin)
+                    document.querySelector('.progress').style.width = '100%'
+                },
+                
+                file_reader.readAsDataURL(file)
+            );
+        }
+
+        inputImg.addEventListener('change', (ev) => {
+            const file = [];
+            let action;
+
+            for (let i = 0; i < ev.target.files.length; i++, action = true) {
+                (typeFormat.includes(ev.target.files[i].type)) && (asdf(ev.target.files[i]), file.push(ev.target.files[i]), document.querySelector('.progress').style.width = '0%', action = true);
+            }
+
+            if ('undefined' === typeof action) {
+                console.log('no se pudo realizar la accion');
+            }
+        })
+
+        window.ondragstart = function (ev) {
+            ev.preventDefault()
+            ev.stopPropagation()
+            suelta_img.classList.add('start')
+        }
+
+        img.ondragover = function (ev) {
+            ev.preventDefault()
+            suelta_img.classList.remove('start')
+        }
+
+        img.ondrop = function (ev) {
+            ev.preventDefault()
+            const data = ev.dataTransfer;
+            const file = [];
+            let action;
+                
+            for (let i = 0; i < data.items.length; i++) {
+                (data.items[i].kind == "file" && typeFormat.includes(data.items[i].type)) && (asdf(data.items[i].getAsFile()), file.push(data.items[i].getAsFile()), document.querySelector('.progress').style.width = '0%', action = true);
+            }
+
+            if ('undefined' === typeof action) {
+                console.log('no se pudo realizar la accion');
+            }
+        }
+
+    </script>
+</body>
+</html>
