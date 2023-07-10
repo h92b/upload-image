@@ -242,23 +242,24 @@
         }
 
         /* inicio items image */
-        div[role="item-img"] > div:hover {
-            opacity: 0.5
+        div[role="item-img"] {
+            opacity: 1;
+            animation: newItem 0.6s cubic-bezier(0.55, 0.06, 0.68, 0.19);
         }
 
-        div[role="item-img"] > div {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        @keyframes newItem {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
         }
 
-        div[role="item-img"] > div > div {
-            position: absolute;
-        }
-
-        div[role="item-img"] > div > div > button:first-child {
-            margin-right: 4px;
+        div[role="item-img"].deleteItem {
+            width: 0%;
+            min-width: inherit;
+            transition: 0.6s;
         }
 
         div[role="item-img"].view {
@@ -270,6 +271,46 @@
             top: 0;
             width: inherit;
             z-index: 1;
+            margin: auto;
+            transition: 1s;
+        }
+
+        div[role="item-img"] > div {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        div[role="item-img"] > div:hover {
+            opacity: 0.5;
+        }
+
+        div[role="item-img"].view > div:hover {
+            opacity: inherit;
+        }
+
+        div[role="item-img"] > div > div {
+            position: absolute;
+        }
+
+        div[role="item-img"] > div > div > button {
+            background-color: blue;
+            border: 1px solid rgb(0, 0, 164);
+            color: white;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            padding: 6px 10px;
+        }
+
+        div[role="item-img"] > div > div > button:first-child {
+            background-color: red;
+            border: 1px solid rgb(164, 0, 0);
+            margin-right: 4px;
+        }
+
+        div[role="item-img"].deleteItem > div > div > button {
+            display: none;
         }
 
         /* fin items image */
@@ -277,8 +318,7 @@
     </style>
 <body>
 </head>
-    <main>
-        
+    <main>        
         <section class="contenerdor">
             <div>
                 <h2>arrastra y suelta</h2>
@@ -329,21 +369,36 @@
         const cont_botton = document.querySelector('.cont-botton');
         const header = document.querySelector('header');
 
-        cont_botton.addEventListener('click', ()=>{
+        cont_botton.addEventListener('click', ()=> {
             (header.classList.toggle('active')) ?
                 header.classList.remove('active') :
                     header.classList.add('active');
-            console.log(`Esta accion es realizada con JavaScript`)
+            console.info(`Esta accion es realizada con JavaScript`)
         });
 
-        header.addEventListener('click', ()=>{
+        header.addEventListener('click', ()=> {
             header.classList.toggle('active')
-            console.log(`Esta accion es realizada con JavaScript`)
+            console.info(`Esta accion es realizada con JavaScript`)
         });
 
         window.onload = function () {
             header.classList.remove('active')
-            console.log(`Esta accion es realizada con JavaScript`)
+            console.info(`Esta accion es realizada con JavaScript`)
+        }
+
+        function deleteItems() {
+            this.removeEventListener('click', deleteItems)
+            this.nextElementSibling.removeEventListener('click', viewItems)
+            this.parentElement.parentElement.parentElement.classList.add('deleteItem')
+            setTimeout(() => {
+                this.parentElement.parentElement.parentElement.remove()
+            }, 800);
+        }
+
+        function viewItems() {
+            (this.parentElement.parentElement.parentElement.classList.toggle('view')) ?
+                (this.parentElement.parentElement.parentElement.classList.add('view'), this.textContent = 'Reducir') :
+                    (this.parentElement.parentElement.parentElement.classList.remove('view'), this.textContent = 'Ampliar');
         }
 
         function asdf(file) {
@@ -378,6 +433,9 @@
                     divMargin.appendChild(divButton)
                     divMargin.appendChild(imgs)
 
+                    buttonClose.addEventListener('click', deleteItems)
+                    buttonView.addEventListener('click', viewItems)
+
                     contenerdor.appendChild(div).appendChild(divMargin)
                     document.querySelector('.progress').style.width = '100%'
                 },
@@ -395,7 +453,7 @@
             }
 
             if ('undefined' === typeof action) {
-                console.log('no se pudo realizar la accion');
+                console.info('no se pudo realizar la accion');
             }
         })
 
@@ -421,7 +479,7 @@
             }
 
             if ('undefined' === typeof action) {
-                console.log('no se pudo realizar la accion');
+                console.info('no se pudo realizar la accion');
             }
         }
 
