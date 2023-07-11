@@ -10,6 +10,14 @@
             font-family: arial, 'sans serif';
             margin: 0;
         }
+        
+        a {
+            text-decoration: none;
+        }
+
+        a:link, a:visited {
+            color: inherit;
+        }
 
         main {
             background-color: rgb(9, 75, 134);
@@ -18,7 +26,6 @@
             overflow-y: auto;
         }
 
-        /* inicio del menu */
         header {
             background: linear-gradient( 270deg, rgb(9, 75, 134, 0.7), black calc(100% - 260px) );
             color: #f7f7f7;
@@ -63,8 +70,13 @@
             cursor: pointer;
             margin-bottom: 2px;
             opacity: 0;
-            padding: 10px;
             transition: 0.5s;
+        }
+        
+        header > div ul > li a {
+            display: block;
+            letter-spacing: 0.04em;
+            padding: 10px;
         }
 
         header.active > div ul > li {
@@ -75,7 +87,7 @@
             border-color: rgb(9, 75, 134);
         }
 
-        header > div > div {
+        header > div > div, .btnClose {
             background: rgb(9, 75, 134);
             border: 1px solid transparent;
             box-shadow: 0 0 20px rgb(31, 65, 97);
@@ -93,7 +105,7 @@
             background-color: rgb(6, 56, 101);
         }
 
-        header > div > div > div {
+        header > div > div > div, .btnClose > div {
             border-top: 1px solid rgb(255, 255, 255);
             box-shadow: 0 1px 1px rgba(6, 56, 101, 0.8);
             margin: auto;
@@ -119,7 +131,7 @@
             transition: 1s;
         }
 
-        header.active > div > div .bar1 {
+        header.active > div > div .bar1, .btnClose > .bar1 {
             top: 14px;
             transform: rotate(40deg);
         }
@@ -128,11 +140,21 @@
             width: 0%;
         }
 
-        header.active > div > div .bar3 {
+        header.active > div > div .bar3, .btnClose > .bar3 {
             top: 12px;
             transform: rotate(-40deg);
         }
-        /* fin del menu */
+
+        .btnClose {
+            right: 6px;
+            background-color: #f7f7f7;
+            box-shadow: initial;
+        }
+
+        .btnClose > div {
+            border-top: 1px solid black;
+            box-shadow: initial;
+        }
 
         .contenerdor {
             display: flex;
@@ -141,7 +163,7 @@
             width: 100%;
         }
 
-        .contenerdor > div {
+        .contenerdor > div, .context div[role="item-img"].deleteItem {
             height: 400px;
             min-width: 280px;
             text-align: center;
@@ -219,7 +241,7 @@
 
         .delete {
             align-items: center;
-            background: rgba(255, 0, 0, 0.671);
+            background-color: rgba(255, 0, 0, 0.671);
             border: 1px solid red;
             border-radius: 50%;
             display: flex;
@@ -234,6 +256,11 @@
 
         .delete.active {
             visibility: visible;
+            z-index: 1;
+        }
+
+        .delete.start {
+            visibility: visible;
         }
 
         .delete i {
@@ -241,7 +268,34 @@
             padding: 4px;
         }
 
-        /* inicio items image */
+        .d-none {
+            display: none;
+        }
+
+        #windowItemsDelete {
+            background-color: #f7f7f7;
+            position: fixed;
+            top: 12px;
+            bottom: 12px;
+            right: 12px;
+            left: 12px;
+        }
+
+        #windowItemsDelete > .context {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            overflow-y: auto;
+            height: calc(100% - 50px);
+        }
+
+        #windowItemsDelete > div > h3 {
+            text-align: center;
+            margin: 0;
+            padding: 10px 0;
+            font-size: 1.35rem;
+        }
+
         div[role="item-img"] {
             opacity: 1;
             animation: newItem 0.6s cubic-bezier(0.55, 0.06, 0.68, 0.19);
@@ -309,11 +363,9 @@
             margin-right: 4px;
         }
 
-        div[role="item-img"].deleteItem > div > div > button {
+        div[role="item-img"].deleteItem > div > div {
             display: none;
         }
-
-        /* fin items image */
 
     </style>
 <body>
@@ -338,17 +390,29 @@
     </main>
 
     <div class="delete">
-        <i class="trash">D</i>
+        <i class="trash">E</i>
+        <div id="windowItemsDelete" class="d-none">
+            <div>
+                <h3>Papelera</h3>
+            </div>
+            <div class="context"></div>
+            <div class="btnClose">
+                <div class="bar1"></div>
+                <div class="bar3"></div>
+            </div>
+        </div>
     </div>
 
     <header class="active">
         <div>
             <h1>PageName</h1>
             <ul>
-                <li>Inicio</li>
-                <li>Inicio</li>
-                <li>Inicio</li>
-                <li>Inicio</li>
+                <li>
+                    <a href="#home">Inicio</a>
+                </li>
+                <li>
+                    <a href="#trash">Papelera</a>
+                </li>
             </ul>
             <div class="cont-botton">
                 <div class="bar1"></div>
@@ -361,13 +425,28 @@
     <script>
         const img = document.querySelector('#img');
         const inputImg = document.querySelector('#inputImg');
-        const suelta_img = document.querySelector('.suelta-img');
         const data_transfer = new DataTransfer();        
         const formatImg = /(.PNG|.png|.JPG|.jpg|.JPEG|.jpeg)$/i;
         const typeFormat = ["image/png", "image/jpg", "image/jpeg"];
         const contenerdor = document.querySelector('.contenerdor');
         const cont_botton = document.querySelector('.cont-botton');
         const header = document.querySelector('header');
+
+        window.addEventListener('hashchange', ()=>{
+            document.querySelector('.delete').classList.remove('active'),
+            document.querySelector('#windowItemsDelete').classList.add('d-none');
+            (window.location.hash === '#trash') && (function(){
+                document.querySelector('.delete').classList.add('active'),
+                document.querySelector('#windowItemsDelete').classList.remove('d-none')
+            }());
+        })
+
+        document.querySelector('.btnClose').addEventListener('click', ()=> window.location.hash = '#')
+
+        window.onload = function () {
+            header.classList.remove('active')
+            console.info(`Esta accion es realizada con JavaScript`)
+        }
 
         cont_botton.addEventListener('click', ()=> {
             (header.classList.toggle('active')) ?
@@ -381,16 +460,13 @@
             console.info(`Esta accion es realizada con JavaScript`)
         });
 
-        window.onload = function () {
-            header.classList.remove('active')
-            console.info(`Esta accion es realizada con JavaScript`)
-        }
-
         function deleteItems() {
             this.removeEventListener('click', deleteItems)
             this.nextElementSibling.removeEventListener('click', viewItems)
             this.parentElement.parentElement.parentElement.classList.add('deleteItem')
+            let cloneItem = this.parentElement.parentElement.parentElement.cloneNode(true);
             setTimeout(() => {
+                document.querySelector('#windowItemsDelete .context').appendChild(cloneItem)
                 this.parentElement.parentElement.parentElement.remove()
             }, 800);
         }
@@ -417,7 +493,6 @@
                     const buttonClose = document.createElement('button');
                     const buttonView = document.createElement('button');
 
-                    div.setAttribute('draggable', 'true')
                     div.setAttribute('role', 'item-img')
                     divMargin.className = "margen-en-el-cuadro-de-la-imagen"
                     imgs.src = ev.target.result
@@ -457,22 +532,50 @@
             }
         })
 
-        window.ondragstart = function (ev) {
-            ev.preventDefault()
-            ev.stopPropagation()
-            suelta_img.classList.add('start')
+        var el = document.querySelector('.suelta-img'), drag_start = 'off';
+
+        function changeContentDrag () {
+            ('undefined' !== typeof el && drag_start === 'on' && (el = document.querySelector('.delete'), true)) && el.classList.add('start');
+            ('undefined' !== typeof el && drag_start === 'off' && (el = document.querySelector('.suelta-img'), true)) && el.classList.add('start');
         }
 
-        img.ondragover = function (ev) {
+        document.documentElement.onmouseleave = function () {
+            el.classList.remove('start');
+        }
+
+        document.documentElement.onmouseenter = function () {
+            el.classList.remove('start');
+        }
+
+        window.ondrag = function (ev) {
             ev.preventDefault()
-            suelta_img.classList.remove('start')
+            if (ev.target.parentElement.parentElement.getAttribute('role') === 'item-img') {
+                el = document.querySelector('.delete');
+            }
+        }
+
+        window.ondragstart = function (ev) {
+            drag_start = 'on'
+        }
+
+        window.ondragend = function (ev) {
+            drag_start = 'off'
+            el.classList.remove('start')
+        }
+
+        window.ondragover = function (ev) {
+            ev.preventDefault()
+            changeContentDrag()
         }
 
         img.ondrop = function (ev) {
-            ev.preventDefault()
+            ev.preventDefault(),
+            changeContentDrag()
+            drag_start = 'off'
             const data = ev.dataTransfer;
             const file = [];
             let action;
+            el.classList.remove('start');
                 
             for (let i = 0; i < data.items.length; i++) {
                 (data.items[i].kind == "file" && typeFormat.includes(data.items[i].type)) && (asdf(data.items[i].getAsFile()), file.push(data.items[i].getAsFile()), document.querySelector('.progress').style.width = '0%', action = true);
