@@ -1,3 +1,370 @@
-/* estilo general */
+/**
+ * Creado Por h92barrios 
+*/
 
-/* estilo general */
+body {
+    background-color: rgb(6, 56, 101);
+    font-family: arial, 'sans serif';
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:link, a:visited {
+    color: inherit;
+}
+
+main {
+    background-color: rgb(9, 75, 134);
+    height: calc(100vh - 50px);
+    margin-top: 50px;
+    overflow-y: auto;
+}
+
+header {
+    background: linear-gradient( 270deg, rgb(9, 75, 134, 0.7), black calc(100% - 260px) );
+    color: #f7f7f7;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    visibility: hidden;
+    transition: 0.6s cubic-bezier(.76,.05,.86,.06);
+}
+
+header.active {
+    width: 100%;
+    visibility: visible;
+}
+
+header > div {
+    padding: 4px 14px 14px;
+    position: relative;
+    bottom: 0;
+    top: 0;
+    width: 240px;
+}
+
+header > div h1 {
+    margin: 0;
+    text-shadow: -2px 1px 2px rgb(9, 75, 134);
+    text-transform: uppercase;
+    visibility: visible;
+}
+
+header > div ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 1em 0 1em;
+}
+
+header > div ul > li {
+    background: rgba(35, 35, 35, 0.04);
+    border: 1px solid rgba(35, 35, 35, 0.04);
+    cursor: pointer;
+    margin-bottom: 2px;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+header > div ul > li a {
+    display: block;
+    letter-spacing: 0.04em;
+    padding: 10px;
+}
+
+header.active > div ul > li {
+    opacity: 1;
+}
+
+header > div ul > li:hover {
+    border-color: rgb(9, 75, 134);
+}
+
+header > div > div, .btnClose {
+    background: rgb(9, 75, 134);
+    border: 1px solid transparent;
+    box-shadow: 0 0 20px rgb(31, 65, 97);
+    cursor: pointer;
+    height: 30px;
+    position: absolute;
+    right: -20px;
+    top: 7px;
+    transition: 0.5s;
+    visibility: visible;
+    width: 36px;
+}
+
+header > div > div:hover {
+    background-color: rgb(6, 56, 101);
+}
+
+header > div > div > div, .btnClose > div {
+    border-top: 1px solid rgb(255, 255, 255);
+    box-shadow: 0 1px 1px rgba(6, 56, 101, 0.8);
+    margin: auto;
+    position: relative;
+    width: 60%;
+    transition: 1s;
+}
+
+header > div > div .bar1 {
+    top: 7px;
+}
+
+header > div > div .bar2 {
+    top: 14px;
+}
+
+header > div > div .bar3 {
+    top: 21px;
+}
+
+header.active > div > div > div {
+    width: 70%;
+    transition: 1s;
+}
+
+header.active > div > div .bar1, .btnClose > .bar1 {
+    top: 14px;
+    transform: rotate(40deg);
+}
+
+header.active > div > div .bar2 {
+    width: 0%;
+}
+
+header.active > div > div .bar3, .btnClose > .bar3 {
+    top: 12px;
+    transform: rotate(-40deg);
+}
+
+.btnClose {
+    right: 6px;
+    background-color: #f7f7f7;
+    box-shadow: initial;
+}
+
+.btnClose > div {
+    border-top: 1px solid black;
+    box-shadow: initial;
+}
+
+.contenerdor {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.contenerdor > div, .context div[role="item-img"].deleteItem {
+    height: 400px;
+    min-width: 280px;
+    text-align: center;
+    width: 33.3%;
+}
+
+@media screen and (max-width: 500px) {
+    .contenerdor > div {
+        margin: auto;
+    }
+}
+
+.margen-en-el-cuadro-de-la-imagen {
+    margin: 6px;
+    height: 96%;
+}
+
+h2 {
+    text-align: center;
+    text-transform: capitalize;
+    margin: 18px 0;
+}
+
+.suelta-img {
+    width: 260px;
+    min-width: 240px;
+    height: 296px;
+    min-height: 240px;
+    border: 3px dashed rgb(160, 178, 232);
+    margin: auto
+}
+
+.suelta-img.start {
+    transform: scale(1.1);
+    border: 3px dashed rgb(0, 255, 85);
+    transition: 1s;
+}
+
+form {
+    width: 100%;
+    height: 100%;
+}
+
+label {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+}
+
+.cont-progress {
+    padding: 1px;
+    width: 100%;
+}
+
+.cont-progress > div {
+    margin: 5px auto 0;
+    min-width: 246px;
+    width: 266px;
+}
+
+.progress {
+    background-color: rgb(160, 178, 232);
+    height: 12px;
+    width: 0%;
+}
+
+.delete {
+    align-items: center;
+    background-color: rgba(255, 0, 0, 0.671);
+    border: 1px solid red;
+    border-radius: 50%;
+    display: flex;
+    height: 98px;
+    justify-content: center;
+    right: -32px;
+    position: fixed;
+    top: -32px;
+    visibility: hidden;
+    width: 98px;
+}
+
+.delete.active {
+    visibility: visible;
+    z-index: 1;
+}
+
+.delete.start {
+    visibility: visible;
+}
+
+.delete.enter {
+    transition: 0.5s;
+    transform: scale(1.25);
+}
+
+.delete i {
+    color: white;
+    padding: 4px;
+}
+
+.d-none {
+    display: none;
+}
+
+#windowItemsDelete {
+    background-color: #f7f7f7;
+    position: fixed;
+    top: 12px;
+    bottom: 12px;
+    right: 12px;
+    left: 12px;
+}
+
+#windowItemsDelete > .context {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    height: calc(100% - 50px);
+}
+
+#windowItemsDelete > div > h3 {
+    text-align: center;
+    margin: 0;
+    padding: 10px 0;
+    font-size: 1.35rem;
+}
+
+div[role="item-img"] {
+    opacity: 1;
+    animation: newItem 0.6s cubic-bezier(0.55, 0.06, 0.68, 0.19);
+}
+
+@keyframes newItem {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+div[role="item-img"].deleteItem {
+    width: 0%;
+    min-width: inherit;
+    transition: 0.6s;
+}
+
+div[role="item-img"].view {
+    bottom: 0;
+    height: inherit;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: inherit;
+    z-index: 1;
+    margin: auto;
+    transition: 1s;
+}
+
+div[role="item-img"] > div {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+div[role="item-img"] > div:hover {
+    opacity: 0.5;
+}
+
+div[role="item-img"].view > div:hover {
+    opacity: inherit;
+}
+
+div[role="item-img"] > div > div {
+    position: absolute;
+}
+
+div[role="item-img"] > div > div > button {
+    background-color: blue;
+    border: 1px solid rgb(0, 0, 164);
+    color: white;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    padding: 6px 10px;
+}
+
+div[role="item-img"] > div > div > button:first-child {
+    background-color: red;
+    border: 1px solid rgb(164, 0, 0);
+    margin-right: 4px;
+}
+
+div[role="item-img"].deleteItem > div > div {
+    display: none;
+}
