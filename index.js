@@ -30,14 +30,19 @@ header.addEventListener('click', ()=> {
     console.info(`Esta accion es realizada con JavaScript`)
 });
 
+function numberTrash() {
+    document.getElementsByClassName('couterTrash')[0].textContent = document.getElementById('recicleTrash').childElementCount;
+}
+
 function deleteItems() {
     this.removeEventListener('click', deleteItems)
     this.nextElementSibling.removeEventListener('click', itemsView)
     this.parentElement.parentElement.parentElement.classList.add('deleteItem')
     let cloneItem = this.parentElement.parentElement.parentElement.cloneNode(true);
     setTimeout(() => {
-        document.querySelector('#windowItemsDelete .context').appendChild(cloneItem)
-        this.parentElement.parentElement.parentElement.remove()
+        document.querySelector('#windowItemsDelete .context').appendChild(cloneItem),
+        this.parentElement.parentElement.parentElement.remove(),
+        numberTrash();
     }, 800);
 }
 
@@ -197,7 +202,8 @@ elem_delete.ondrop = function (ev) {
         elem.removeAttribute('ondrag'),
         elem.removeAttribute('id'),
         elem.className = 'deleteItem',
-        action = true
+        action = true,
+        numberTrash()
         );
 
     if ('undefined' === typeof action) {
